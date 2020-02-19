@@ -12,9 +12,9 @@ var manifest *model.Manifest
 
 const manifestStr = `
 {
-  "id": "com.mattermost.plugin-starter-template",
-  "name": "Plugin Starter Template",
-  "description": "This plugin serves as a starting point for writing a Mattermost plugin.",
+  "id": "com.github.ericjaystevens.matterdoro",
+  "name": "Matterdoro",
+  "description": "Keep focused and track your work by practicing the Pomodoro methond in Mattermost.",
   "version": "0.1.0",
   "min_server_version": "5.12.0",
   "server": {
