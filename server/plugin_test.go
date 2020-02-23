@@ -1,27 +1,31 @@
 package main
 
 import (
-	"io/ioutil"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/mattermost/mattermost-server/v5/model"
+	"github.com/mattermost/mattermost-server/v5/plugin/plugintest"
+	"github.com/stretchr/testify/mock"
 )
 
-func TestServeHTTP(t *testing.T) {
-	assert := assert.New(t)
-	plugin := Plugin{}
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/", nil)
+func TestCreateBotDMPost(t *testing.T) {
 
-	plugin.ServeHTTP(nil, w, r)
+	p := new(Plugin)
+	api := &plugintest.API{}
 
-	result := w.Result()
-	assert.NotNil(result)
-	bodyBytes, err := ioutil.ReadAll(result.Body)
-	assert.Nil(err)
-	bodyString := string(bodyBytes)
+	testChannel := &model.Channel{Id: "12345"}
+	api.On("GetDirectChannel", mock.Anything, mock.Anything).Return(testChannel, nil)
+	api.On("CreatePost", mock.Anything).Return(nil, nil)
 
-	assert.Equal("Hello, world!", bodyString)
+	p.SetAPI(api)
+
+	message := "Done"
+	userID := "12345"
+
+	got := p.CreateBotDMPost(userID, message)
+
+	if got != nil {
+		t.Errorf("got: %v\n wanted: %v\n", got, nil)
+	}
+
 }
