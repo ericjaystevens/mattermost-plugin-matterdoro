@@ -3,8 +3,10 @@
 An interval based time tracker plugin for Mattermost for practicing the [Pomdoro technique](https://en.wikipedia.org/wiki/Pomodoro_Technique) 
 
 ###### Matterdoro - Slash Command Help
-* |/doro start| - Starts a timer.
-* |/doro help| - Dispays Matterdoro help 
+```
+/doro start - Starts a timer
+/doro help - Dispays Matterdoro help
+```
 
 ## Vision
 
