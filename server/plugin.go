@@ -1,13 +1,18 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/mattermost/mattermost-server/mlog"
 	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mattermost/mattermost-server/v5/plugin"
 	"github.com/pkg/errors"
+)
+
+const (
+	botUsername    = "doro"
+	botDisplayName = "Doro Yon Time"
+	botDescription = "A bot account created by the Matterdoro plugin."
 )
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
@@ -26,22 +31,20 @@ type Plugin struct {
 
 //OnActivate is called when the matterdoro plugin is activated
 func (p *Plugin) OnActivate() (err error) {
-	if err = p.API.RegisterCommand(getCommand()); err != nil {
-		return errors.Wrap(err, fmt.Sprintf("Unable to register command: %v", getCommand()))
+	bot := &model.Bot{
+		Username:    botUsername,
+		DisplayName: botDisplayName,
+		Description: botDescription,
 	}
-
-	//configure doro bot
-	botID, err := p.Helpers.EnsureBot(&model.Bot{
-		Username:    "Doro",
-		DisplayName: "Doro Yon Time",
-		Description: "Created by the Matterdoro plugin.",
-	})
-	if err != nil {
-		return errors.Wrap(err, "failed to ensure doro bot")
+	botUserID, appErr := p.Helpers.EnsureBot(bot)
+	if appErr != nil {
+		return errors.Wrap(appErr, "failed to ensure bot user")
 	}
-	p.BotUserID = botID
+	p.BotUserID = botUserID
 
-	return
+	p.API.RegisterCommand(getCommand())
+
+	return nil
 }
 
 // CreateBotDMPost takes a destination userID and message and sends a direct
